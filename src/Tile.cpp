@@ -1,8 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(sf::Vector2f location, TileType type, sf::Color color ,sf::Sprite sprite) : Object(location, sprite), m_visited(false), m_type(type), m_color(color) 
-{
-}
+Tile::Tile(sf::Vector2f location, sf::Sprite sprite) : Object(location, sprite), m_visited(false) {}
 
 //
 //void Tile::draw(sf::RenderWindow& window) const

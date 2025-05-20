@@ -12,5 +12,5 @@ enum class TileType
 namespace SIZE
 	{
 	 // tile = 20pixel * 20pixel
-	constexpr int TILE_SIZE = 20; // size of each tile in pixels
+	constexpr int TILE_SIZE = 18; // size of each tile in pixels
 } // namespace Size
