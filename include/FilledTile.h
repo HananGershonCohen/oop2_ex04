@@ -1,6 +1,5 @@
 #pragma once
 #include "Tile.h"
-#include "SfmlManager.h"
 
 class FilledTile : public Tile
 {

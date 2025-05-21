@@ -7,7 +7,6 @@ class Tile : public Object
 public:
 	Tile(sf::Vector2f location, sf::Sprite sprite);
 	virtual ~Tile() = default;
-	virtual void draw(sf::RenderWindow& window) override {};
 
 protected:
 	
