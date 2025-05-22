@@ -16,32 +16,54 @@ void Player::move(float deltaTime)
 	// Handle player movement here
 	// Example: m_location += speed * deltaTime;
 	
-	sf::Vector2f direction{ 0,0 };
+	
+	//1. choose direction
+	sf::Vector2f newDirection{ 0,0 };
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	{
-		direction.y -= 1;
+	{              
+		newDirection.y -= 1;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
-		direction.y += 1;
+		newDirection.y += 1;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		direction.x -= 1;
+		newDirection.x -= 1;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		direction.x += 1;
+		newDirection.x += 1;
 	}
 
 	float speed = 100;
-	// m_sprite.move(direction * deltaTime * speed);
-	 m_location += direction * deltaTime * speed; 
+	
+	// 2. if user changed directioin: update location on the Tile. 
+	if (m_direction != newDirection)
+	{
+		m_direction = newDirection;
+		int newX = static_cast<int>(m_location.x + 9) / 18;
+		int newY = static_cast<int>(m_location.y + 9) / 18;
+		newX *= 18;
+		newY *= 18;
+		m_location = sf::Vector2f{ static_cast<float>(newX), static_cast<float>(newY) };
+	}
 
-
+	m_location += newDirection * deltaTime * speed;
 }
 
+sf::Vector2f Player::ArrangeLocation(sf::Vector2f loc)
+{
+	int newX = static_cast<int>(loc.x + SIZE::HalfPixelSize) / SIZE::TILE_SIZE;
+	int newY = static_cast<int>(loc.y + SIZE::HalfPixelSize) / SIZE::TILE_SIZE;
+	newX *= SIZE::TILE_SIZE;
+	newY *= SIZE::TILE_SIZE;
+	return sf::Vector2f{ static_cast<float>(newX), static_cast<float>(newY) };
+}
 //void Player::move(std::vector<std::unique_ptr<Tile>>& board, float deltaTime)
 //{
 //
 //}
+
+
+

@@ -11,6 +11,6 @@ public:
 	virtual void move(float) = 0;
 
 
-private:
-	sf::Vector2f m_direction{ 1,0 };
+protected:
+	sf::Vector2f m_direction = { 0,0 };
 };

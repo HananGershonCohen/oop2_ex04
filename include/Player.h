@@ -9,4 +9,10 @@ public:
 	virtual void draw(sf::RenderWindow&) override;
 	// virtual void move(std::vector<std::unique_ptr<Tile>>&, float) override;
 	virtual void move(float) override;
+
+private:
+	sf::Vector2f ArrangeLocation(sf::Vector2f);
+
+
+
 };
