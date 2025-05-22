@@ -8,7 +8,7 @@ public:
 	MobileObject(sf::Vector2f location, sf::Sprite sprite);
 	virtual ~MobileObject() = default;
 	//virtual void move(std::vector<std::unique_ptr<Tile>>&, float) = 0;
-	virtual void move(float) = 0;
+	virtual void move(std::vector <std::vector<std::unique_ptr<Tile>>>& ,float) = 0;
 
 
 protected:

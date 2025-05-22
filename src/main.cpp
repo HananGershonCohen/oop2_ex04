@@ -1,7 +1,16 @@
 #include "GameController.h"
-
+#include <iostream>
 int main()
 {
-	GameController game;
-	game.run();
+
+	try
+	{
+		GameController game;
+		game.run();
+	}
+	catch (...)
+	{
+		std::cerr << "Unknown error occurred." << std::endl;
+	}
+	
 }

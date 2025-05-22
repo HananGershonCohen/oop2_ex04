@@ -14,4 +14,5 @@ protected:
 
 	sf::Vector2f m_location;
 	sf::Sprite m_sprite;
+	
 };

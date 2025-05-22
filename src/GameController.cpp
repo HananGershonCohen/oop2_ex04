@@ -5,35 +5,47 @@
 #include "FilledTile.h"
 #include "TrailTile.h"
 #include "Utility.h"
-#include <fstream>
+
 #include <iostream>
 #include <string>
+#include <sstream>
 
-GameController::GameController() 
+GameController::GameController() : m_information(m_sfmlManager)
 {
-	
+	try
+	{
+		updateInfoFromFile();
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
+	catch (...)
+	{
+		std::cerr << "Unknown error occurred while reading the file." << std::endl;
+
+	}
+	initBoard();
+	initWindow();
 }
 
 void GameController::run()
 {
-	updateInfoFromFile();
-	initBoard();
-	initWindow();
-
-	// width . height
-
-	while (m_window.isOpen())
+	while (readLevels()) // read the levels from the file
 	{
-
-		sf::Event event;
-		while (m_window.pollEvent(event))
+		while (m_window.isOpen()) // Main game loop
 		{
-			if (event.type == sf::Event::Closed)
-				m_window.close();
+			sf::Event event;
+			while (m_window.pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+					m_window.close();
+			}
+			moveObj();
+			drawBoard();
 		}
-		moveObj();
-		drawBoard();
 	}
+
 }
 
 void GameController::moveObj()
@@ -41,24 +53,34 @@ void GameController::moveObj()
 	float deltaTime = m_clock.restart().asSeconds();
 	for (int i = 0; i < m_MobileVec.size(); ++i)
 	{
-		m_MobileVec[i]->move(deltaTime);
+		m_MobileVec[i]->move(m_TileVec, deltaTime);
 	}
 }
 
 void GameController::updateInfoFromFile()
 {
-	std::fstream file("def.txt");
-	if (!file.is_open())
+	m_fileLevels.open("def.txt");
+	if (!m_fileLevels.is_open())
 	{
 		std::cerr << "Error opening file" << std::endl;
 		return;
 	}
+	int rows, cols, life;
 
-	int rows, cols, numEnemy;
-	file >> rows >> cols >> numEnemy;
+	// Read the first line
+	std::string line;
+	std::getline(m_fileLevels, line); 
+	std::stringstream ss(line);
+	ss >> rows >> cols >> life;
+	if (ss.fail())
+	{
+		std::string errorMsg = "this First line: " + line + "\n need to enter {row col life} \n";
+		throw std::runtime_error(errorMsg);
+	}
+
 	m_information.setTilesPerRow(rows);
 	m_information.setTilesPerCol(cols);
-	m_information.setNumEnemy(numEnemy);
+	m_information.setLife(life);
 }
 
 void GameController::initBoard()
@@ -95,7 +117,7 @@ void GameController::initWindow()
 {
 	int WidthWindow = SIZE::TILE_SIZE * m_information.getTilesPerCol();
 	int HeightWindow = SIZE::TILE_SIZE * m_information.getTilesPerRow();
-	m_window.create(sf::VideoMode(WidthWindow, HeightWindow), "Game Xonix!");
+	m_window.create(sf::VideoMode(WidthWindow, HeightWindow + SIZE::TOOLBAR_SIZE), "Game Xonix!");
 	m_window.setFramerateLimit(60);
 }
 
@@ -116,6 +138,32 @@ void GameController::drawBoard()
 		m_MobileVec[i]->draw(m_window);
 	}
 
+	m_information.draw(m_window); // draw the information on the screen
+
 	m_window.display();
+}
+
+bool GameController::readLevels()
+{
+	//The line will contain the percentage of closed area required to win and the number of enemies
+	std::string line;
+	if (!std::getline(m_fileLevels, line))
+	{
+		std::cerr << "Error reading line from file" << std::endl;
+		return false;
+	}
+
+	std::stringstream ss(line);
+	int closePrecent, numEnemy;
+	ss >> closePrecent >> numEnemy;
+	if (ss.fail())
+	{
+		std::string errorMsg = "this line: " + line + "\n need to enter {closePrecent numEnemy} \n";
+		throw std::runtime_error(errorMsg);
+	}
+	m_information.setClosePrecent(closePrecent);
+	m_information.setNumEnemy(numEnemy);
+
+	return true;
 }
 

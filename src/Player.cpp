@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(sf::Vector2f location, SfmlManager& SfmlMan) : MobileObject(location, sf::Sprite{ SfmlMan.getTilesTex() })
+Player::Player(sf::Vector2f location, SfmlManager& SfmlMan) :m_SfmlMan(SfmlMan), MobileObject(location, sf::Sprite{ SfmlMan.getTilesTex() })
 {
 }
 
@@ -11,7 +11,7 @@ void Player::draw(sf::RenderWindow& window)
 	window.draw(m_sprite);
 }
 
-void Player::move(float deltaTime)
+void Player::move(std::vector <std::vector<std::unique_ptr<Tile>>>& board, float deltaTime)
 {
 	// Handle player movement here
 	// Example: m_location += speed * deltaTime;
@@ -42,23 +42,19 @@ void Player::move(float deltaTime)
 	if (m_direction != newDirection)
 	{
 		m_direction = newDirection;
-		int newX = static_cast<int>(m_location.x + 9) / 18;
-		int newY = static_cast<int>(m_location.y + 9) / 18;
-		newX *= 18;
-		newY *= 18;
-		m_location = sf::Vector2f{ static_cast<float>(newX), static_cast<float>(newY) };
+		ArrangeLocation(m_location);
 	}
 
 	m_location += newDirection * deltaTime * speed;
 }
 
-sf::Vector2f Player::ArrangeLocation(sf::Vector2f loc)
+void Player::ArrangeLocation(sf::Vector2f loc)
 {
 	int newX = static_cast<int>(loc.x + SIZE::HalfPixelSize) / SIZE::TILE_SIZE;
 	int newY = static_cast<int>(loc.y + SIZE::HalfPixelSize) / SIZE::TILE_SIZE;
 	newX *= SIZE::TILE_SIZE;
 	newY *= SIZE::TILE_SIZE;
-	return sf::Vector2f{ static_cast<float>(newX), static_cast<float>(newY) };
+	m_location =  sf::Vector2f{ static_cast<float>(newX), static_cast<float>(newY) };
 }
 //void Player::move(std::vector<std::unique_ptr<Tile>>& board, float deltaTime)
 //{
