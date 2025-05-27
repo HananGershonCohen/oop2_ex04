@@ -10,8 +10,9 @@ void Information::draw(sf::RenderWindow& window)
 	text.setFont(m_SfmlManager.getFont());
 	text.setCharacterSize(15);
 	text.setFillColor(sf::Color::White);
-	text.setString("Life: " + std::to_string(m_life)  +
-		"    Close Percent: " + std::to_string(m_closePrecent));
+	text.setString("Life: " + std::to_string(m_life) +
+		"    Close Percent: " + std::to_string(m_closePrecent)
+		+ "    Level: " + std::to_string(m_level));
 
 	// set position of the text 
 	auto windowSize = window.getSize();

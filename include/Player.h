@@ -10,9 +10,13 @@ public:
 	virtual void move(std::vector<std::vector<std::unique_ptr<Tile>>>&, float) override;
 
 private:
+	bool m_inTrailMode = false;
+	bool m_needToDoRecursion = false;
 
-	void ArrangeLocation(sf::Vector2f);
 	SfmlManager& m_SfmlMan;
-
-
+	void updateNewLoc(std::vector <std::vector<std::unique_ptr<Tile>>>&, sf::Vector2f);
+	void ArrangeLocation(sf::Vector2f&);
+	void FloodFillRec(std::vector <std::vector<std::unique_ptr<Tile>>>&,int, int);
+	void updateSigns(std::vector <std::vector<std::unique_ptr<Tile>>>&);
+	void cleanSigns(std::vector <std::vector<std::unique_ptr<Tile>>>&);
 };
